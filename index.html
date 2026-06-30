@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>knitella.pk — handmade with thread & love</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --paper: #f3ecdf;
+    --paper2: #ece2d0;
+    --cardboard: #e8dcc4;
+    --ink: #4a3f2e;
+    --ink-soft: #7a6c54;
+    --terracotta: #c4603f;
+    --moss: #6b7a4f;
+    --butter: #e8b339;
+    --thread-pink: #d98a93;
+    --thread-blue: #6c93a8;
+    --washi: #d4a574;
+    --line: rgba(74,63,46,0.18);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(74,63,46,0.045) 1px, transparent 0);
+    background-size: 22px 22px;
+  }
+
+  .wobbly { border-radius: 255px 15px 225px 15px/15px 225px 15px 255px; }
+
+  /* ── hand-drawn sticker shapes used throughout ── */
+  .sticker {
+    display: inline-flex; align-items: center; justify-content: center;
+    transform: rotate(-4deg);
+    filter: drop-shadow(2px 3px 0 rgba(74,63,46,0.12));
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 5vw;
+    background: rgba(243,236,223,0.94);
+    backdrop-filter: blur(6px);
+    border-bottom: 2px dashed var(--line);
+    transition: padding 0.3s;
+  }
+  nav.scrolled { padding: 11px 5vw; }
+
+  .nav-logo {
+    font-family: 'Caveat', cursive;
+    font-size: 2.1rem; font-weight: 700;
+    color: var(--ink); text-decoration: none;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nav-logo .dot { color: var(--terracotta); font-size: 1.3rem; }
+
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-family: 'Nunito', sans-serif; font-weight: 700;
+    font-size: 0.82rem; letter-spacing: 0.02em;
+    color: var(--ink); text-decoration: none; opacity: 0.7;
+    position: relative; transition: opacity 0.2s;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; left: 0; bottom: -4px;
+    width: 0; height: 2px; background: var(--terracotta);
+    transition: width 0.25s;
+  }
+  .nav-links a:hover { opacity: 1; }
+  .nav-links a:hover::after { width: 100%; }
+
+  .nav-cart {
+    display: flex; align-items: center; gap: 7px;
+    font-family: 'Nunito', sans-serif; font-weight: 700;
+    font-size: 0.82rem;
+    color: var(--ink); cursor: pointer;
+    background: var(--paper2); border: 2px solid var(--ink);
+    padding: 8px 14px; border-radius: 100px;
+    transition: transform 0.15s, background 0.2s;
+  }
+  .nav-cart:hover { background: var(--butter); transform: translateY(-1px); }
+  .cart-dot {
+    width: 19px; height: 19px; border-radius: 50%;
+    background: var(--terracotta); color: var(--paper);
+    font-size: 0.68rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1.1fr 1fr;
+    align-items: center;
+    padding: 110px 5vw 70px;
+    gap: 40px;
+    position: relative;
+  }
+
+  .hero-text { max-width: 540px; position: relative; }
+
+  .hero-eyebrow {
+    font-family: 'Caveat', cursive; font-weight: 600;
+    font-size: 1.4rem; color: var(--terracotta);
+    margin-bottom: 6px; display: inline-block;
+    transform: rotate(-2deg);
+  }
+
+  .hero-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.6rem, 5.4vw, 4.6rem);
+    font-weight: 500; line-height: 1.04;
+    color: var(--ink); margin-bottom: 24px;
+    letter-spacing: -0.01em;
+  }
+  .hero-title em {
+    font-style: italic; font-weight: 400;
+    color: var(--terracotta);
+    position: relative;
+  }
+  .hero-title .underline-doodle {
+    position: relative;
+    display: inline-block;
+  }
+  .hero-title .underline-doodle svg {
+    position: absolute; left: 0; bottom: -10px; width: 100%; height: 14px;
+  }
+
+  .hero-desc {
+    font-size: 1.02rem; line-height: 1.7;
+    color: var(--ink-soft);
+    max-width: 420px; margin-bottom: 34px;
+    font-weight: 500;
+  }
+
+  .hero-ctas { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+
+  .btn-primary {
+    padding: 14px 30px;
+    background: var(--terracotta); color: var(--paper);
+    font-family: 'Nunito', sans-serif; font-weight: 800;
+    font-size: 0.92rem;
+    border: 2px solid var(--ink);
+    border-radius: 100px;
+    cursor: pointer; text-decoration: none; display: inline-block;
+    box-shadow: 3px 3px 0 var(--ink);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn-primary:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--ink); }
+
+  .btn-ghost {
+    font-family: 'Caveat', cursive; font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--ink); text-decoration: none;
+    border-bottom: 2px dashed var(--ink);
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .btn-ghost:hover { color: var(--terracotta); border-color: var(--terracotta); }
+
+  /* hero corkboard visual */
+  .hero-visual {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    height: 540px;
+  }
+  .corkboard {
+    position: relative;
+    width: 320px; height: 380px;
+    background: var(--cardboard);
+    border: 3px solid var(--ink);
+    border-radius: 14px;
+    transform: rotate(2deg);
+    box-shadow: 6px 8px 0 rgba(74,63,46,0.25);
+  }
+  .pin-photo {
+    position: absolute;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 10px 10px 28px;
+    box-shadow: 0 6px 16px rgba(74,63,46,0.18);
+  }
+  .pin-photo .img {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.6rem;
+  }
+  .pin-photo .cap {
+    position: absolute; bottom: 6px; left: 0; right: 0; text-align: center;
+    font-family: 'Caveat', cursive; font-size: 0.95rem; color: var(--ink-soft);
+  }
+  .pin-1 { top: -28px; left: 18px; width: 150px; height: 150px; transform: rotate(-7deg); z-index: 3; }
+  .pin-2 { top: 40px; right: -22px; width: 130px; height: 130px; transform: rotate(8deg); z-index: 2; }
+  .pin-3 { bottom: -30px; left: 50px; width: 165px; height: 140px; transform: rotate(4deg); z-index: 4; }
+  .pin-dot {
+    position: absolute; width: 14px; height: 14px; border-radius: 50%;
+    background: var(--terracotta); top: -7px; left: 50%; transform: translateX(-50%);
+    box-shadow: inset -2px -2px 0 rgba(0,0,0,0.15);
+    z-index: 5;
+  }
+  .tape {
+    position: absolute; width: 70px; height: 26px;
+    background: var(--washi); opacity: 0.85;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .badge-stamp {
+    position: absolute; bottom: -16px; right: -16px; z-index: 6;
+    width: 88px; height: 88px; border-radius: 50%;
+    background: var(--butter); border: 2.5px dashed var(--ink);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'Caveat', cursive; font-weight: 700;
+    font-size: 0.78rem; color: var(--ink); text-align: center; line-height: 1.2;
+    transform: rotate(-8deg);
+    animation: wiggle 4s ease-in-out infinite;
+  }
+  @keyframes wiggle {
+    0%,100% { transform: rotate(-8deg); }
+    50% { transform: rotate(-3deg); }
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex; align-items: center; justify-content: center;
+    padding: 50px 5vw 30px; gap: 16px;
+  }
+  .divider-line { flex: 1; height: 2px; background: var(--line); border-radius: 2px; }
+  .divider-motif {
+    font-family: 'Caveat', cursive; font-weight: 600;
+    font-size: 1.4rem; color: var(--ink-soft);
+  }
+
+  /* ── MARQUEE ── */
+  .marquee-wrap {
+    background: var(--ink);
+    padding: 13px 0;
+    overflow: hidden; white-space: nowrap;
+    transform: rotate(-1deg) scale(1.02);
+    margin: 20px 0;
+  }
+  .marquee-track { display: inline-flex; animation: marquee 24s linear infinite; }
+  .marquee-track span {
+    font-family: 'Caveat', cursive; font-weight: 600;
+    font-size: 1.3rem; color: var(--paper); padding: 0 26px;
+  }
+  .marquee-track .dot { color: var(--butter); font-size: 0.7rem; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+
+  /* ── ABOUT STRIP ── */
+  .about-strip {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    padding: 50px 5vw 70px;
+  }
+  .about-item {
+    background: var(--paper2);
+    border: 2px solid var(--ink);
+    border-radius: 18px;
+    padding: 30px 24px;
+    text-align: center;
+    position: relative;
+    transition: transform 0.2s;
+  }
+  .about-item:nth-child(1) { transform: rotate(-1.2deg); }
+  .about-item:nth-child(2) { transform: rotate(0.8deg); }
+  .about-item:nth-child(3) { transform: rotate(-0.6deg); }
+  .about-item:hover { transform: rotate(0deg) translateY(-3px); }
+  .about-icon {
+    font-size: 1.9rem; margin-bottom: 10px;
+    display: inline-block;
+  }
+  .about-title {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 1.2rem; color: var(--ink); margin-bottom: 8px;
+  }
+  .about-desc {
+    font-size: 0.86rem; line-height: 1.6; color: var(--ink-soft); font-weight: 500;
+  }
+
+  /* ── SHOP ── */
+  #shop { padding: 30px 5vw 90px; }
+
+  .section-header {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin-bottom: 40px;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .section-eyebrow {
+    font-family: 'Caveat', cursive; font-weight: 600;
+    font-size: 1.25rem; color: var(--terracotta); margin-bottom: 2px;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+    font-weight: 500; color: var(--ink);
+  }
+  .section-link {
+    font-family: 'Caveat', cursive; font-weight: 600;
+    font-size: 1.2rem; color: var(--ink-soft); text-decoration: none;
+    border-bottom: 2px dashed transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .section-link:hover { color: var(--terracotta); border-color: var(--terracotta); }
+
+  .filter-tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 38px; }
+  .filter-tab {
+    padding: 9px 20px;
+    font-family: 'Nunito', sans-serif; font-weight: 700;
+    font-size: 0.82rem;
+    border: 2px solid var(--ink); background: var(--paper);
+    color: var(--ink); cursor: pointer;
+    border-radius: 100px;
+    transition: all 0.2s;
+  }
+  .filter-tab.active, .filter-tab:hover {
+    background: var(--ink); color: var(--paper);
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
+    gap: 30px;
+  }
+
+  .product-card {
+    background: var(--paper);
+    border: 2.5px solid var(--ink);
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 14px 14px 0;
+    position: relative;
+    box-shadow: 4px 5px 0 rgba(74,63,46,0.15);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .product-card:nth-child(odd) { transform: rotate(-0.6deg); }
+  .product-card:nth-child(even) { transform: rotate(0.6deg); }
+  .product-card:hover {
+    transform: rotate(0deg) translateY(-5px);
+    box-shadow: 6px 8px 0 rgba(74,63,46,0.2);
+  }
+
+  .product-tape {
+    position: absolute; top: -10px; left: 50%; transform: translateX(-50%) rotate(-2deg);
+    width: 56px; height: 22px; background: var(--washi); opacity: 0.9;
+    z-index: 3;
+  }
+
+  .product-img {
+    width: 100%; height: 210px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3.6rem;
+    border: 2px solid var(--ink);
+    position: relative; overflow: hidden;
+  }
+
+  .product-tag {
+    position: absolute; top: 10px; left: 10px; z-index: 2;
+    font-family: 'Caveat', cursive; font-weight: 700;
+    font-size: 0.95rem;
+    padding: 3px 12px;
+    background: var(--paper); color: var(--ink);
+    border: 1.5px solid var(--ink);
+    border-radius: 100px;
+    transform: rotate(-5deg);
+  }
+  .product-tag.new { background: var(--terracotta); color: var(--paper); border-color: var(--ink); }
+
+  .product-info { padding: 16px 4px 18px; }
+  .product-cat {
+    font-family: 'Caveat', cursive; font-weight: 600;
+    font-size: 1.05rem; color: var(--ink-soft); margin-bottom: 2px;
+  }
+  .product-name {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 1.12rem; color: var(--ink);
+    margin-bottom: 10px; line-height: 1.25;
+  }
+  .product-footer { display: flex; justify-content: space-between; align-items: center; }
+  .product-price {
+    font-family: 'Nunito', sans-serif; font-weight: 800;
+    font-size: 0.95rem; color: var(--terracotta);
+  }
+  .add-btn {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--paper); color: var(--ink);
+    border: 2px solid var(--ink); cursor: pointer;
+    font-size: 1.15rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, transform 0.15s, color 0.2s;
+  }
+  .add-btn:hover { background: var(--ink); color: var(--paper); transform: scale(1.1) rotate(8deg); }
+
+  /* ── TESTIMONIAL ── */
+  .testimonial-section {
+    padding: 80px 5vw;
+    background: var(--ink);
+    text-align: center;
+    position: relative;
+    border-radius: 0;
+  }
+  .testimonial-section::before, .testimonial-section::after {
+    content: ''; position: absolute; left: 0; right: 0; height: 14px;
+    background: repeating-linear-gradient(-45deg, var(--paper) 0 10px, transparent 10px 20px);
+  }
+  .testimonial-section::before { top: 0; }
+  .testimonial-section::after { bottom: 0; transform: scaleY(-1); }
+  .testimonial-label {
+    font-family: 'Caveat', cursive; font-weight: 600;
+    font-size: 1.3rem; color: var(--butter); margin-bottom: 18px;
+  }
+  .testimonial-quote {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+    font-weight: 400; font-style: italic;
+    color: var(--paper); line-height: 1.45;
+    max-width: 680px; margin: 0 auto 20px;
+  }
+  .testimonial-author {
+    font-family: 'Nunito', sans-serif; font-weight: 700;
+    font-size: 0.85rem; color: var(--paper); opacity: 0.65;
+  }
+
+  /* ── INSTAGRAM STRIP ── */
+  .insta-section { padding: 80px 5vw; }
+  .insta-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 14px; margin-top: 36px;
+  }
+  .insta-item {
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.4rem;
+    cursor: pointer; overflow: hidden; position: relative;
+    border: 2px solid var(--ink);
+    transition: transform 0.2s;
+  }
+  .insta-item:nth-child(odd) { transform: rotate(-2deg); }
+  .insta-item:nth-child(even) { transform: rotate(2deg); }
+  .insta-item:hover { transform: rotate(0deg) scale(1.04); z-index: 2; }
+  .insta-item::after {
+    content: '♡'; position: absolute; inset: 0;
+    background: rgba(74,63,46,0.5);
+    opacity: 0; transition: opacity 0.25s;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; color: var(--paper);
+  }
+  .insta-item:hover::after { opacity: 1; }
+
+  /* ── FOOTER ── */
+  footer { background: var(--cardboard); padding: 56px 5vw 26px; border-top: 3px dashed var(--ink); }
+  .footer-top {
+    display: grid; grid-template-columns: 2fr 1fr 1fr;
+    gap: 44px; padding-bottom: 36px; margin-bottom: 22px;
+  }
+  .footer-brand-name {
+    font-family: 'Caveat', cursive; font-weight: 700;
+    font-size: 2rem; color: var(--ink); margin-bottom: 10px;
+  }
+  .footer-brand-desc { font-size: 0.85rem; line-height: 1.7; color: var(--ink-soft); max-width: 280px; font-weight: 500; }
+  .footer-col-title {
+    font-family: 'Nunito', sans-serif; font-weight: 800;
+    font-size: 0.78rem; letter-spacing: 0.05em; text-transform: uppercase;
+    color: var(--ink); margin-bottom: 14px;
+  }
+  .footer-links { list-style: none; }
+  .footer-links li { margin-bottom: 8px; }
+  .footer-links a { font-size: 0.85rem; color: var(--ink-soft); text-decoration: none; font-weight: 600; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--terracotta); }
+  .footer-bottom {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.78rem; color: var(--ink-soft); font-weight: 600;
+    border-top: 2px solid var(--line); padding-top: 18px; flex-wrap: wrap; gap: 8px;
+  }
+  .footer-heart { color: var(--terracotta); }
+
+  /* ── CART TOAST ── */
+  .cart-toast {
+    position: fixed; bottom: 28px; right: 28px; z-index: 200;
+    background: var(--ink); color: var(--paper);
+    padding: 14px 22px; font-family: 'Nunito', sans-serif; font-weight: 700;
+    font-size: 0.85rem; border-radius: 12px;
+    border: 2px solid var(--ink);
+    box-shadow: 3px 4px 0 var(--terracotta);
+    transform: translateY(90px) rotate(3deg); opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    pointer-events: none;
+  }
+  .cart-toast.show { transform: translateY(0) rotate(0deg); opacity: 1; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; padding-top: 100px; min-height: auto; gap: 50px; }
+    .hero-visual { height: 380px; }
+    .corkboard { width: 260px; height: 300px; }
+    .about-strip { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr; gap: 26px; }
+    .insta-grid { grid-template-columns: repeat(3, 1fr); }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">knitella<span class="dot">.pk</span></a>
+  <ul class="nav-links">
+    <li><a href="#shop">shop</a></li>
+    <li><a href="#about">about</a></li>
+    <li><a href="#insta">follow</a></li>
+  </ul>
+  <button class="nav-cart" onclick="showToast('opening cart...')">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    cart <span class="cart-dot" id="cart-count">0</span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <span class="hero-eyebrow">✦ lahore-based · made by hand ✦</span>
+    <h1 class="hero-title">a little yarn,<br>a lot of <span class="underline-doodle">love<svg viewBox="0 0 200 14" preserveAspectRatio="none"><path d="M2 8 Q 50 1, 100 8 T 198 8" stroke="#c4603f" stroke-width="4" fill="none" stroke-linecap="round"/></svg></span>.</h1>
+    <p class="hero-desc">Crochet bags, keychains & little amigurumi friends — handmade one stitch at a time. Delivering all over Pakistan, custom orders always welcome.</p>
+    <div class="hero-ctas">
+      <a href="#shop" class="btn-primary">peek the shop</a>
+      <a href="#insta" class="btn-ghost">say hi on insta →</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="corkboard">
+      <div class="tape" style="top:-13px; left:30px; transform:rotate(-8deg);"></div>
+      <div class="tape" style="top:-13px; right:24px; transform:rotate(6deg);"></div>
+      <div class="pin-photo pin-1">
+        <div class="pin-dot"></div>
+        <div class="img" style="background:#dce8d8;">🐸</div>
+        <div class="cap">froggy bag</div>
+      </div>
+      <div class="pin-photo pin-2">
+        <div class="pin-dot"></div>
+        <div class="img" style="background:#f0d9c8;">⭐</div>
+        <div class="cap">star tote</div>
+      </div>
+      <div class="pin-photo pin-3">
+        <div class="pin-dot"></div>
+        <div class="img" style="background:#e3d4ec;">🐰</div>
+        <div class="cap">miffy keychain</div>
+      </div>
+      <div class="badge-stamp">100%<br>hand<br>made</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="marquee">
+    <span>crochet bags</span><span class="dot">✦</span>
+    <span>anime amigurumi</span><span class="dot">✦</span>
+    <span>miffy keychains</span><span class="dot">✦</span>
+    <span>ships all over pk</span><span class="dot">✦</span>
+    <span>custom orders open</span><span class="dot">✦</span>
+    <span>made with care</span><span class="dot">✦</span>
+    <span>crochet bags</span><span class="dot">✦</span>
+    <span>anime amigurumi</span><span class="dot">✦</span>
+    <span>miffy keychains</span><span class="dot">✦</span>
+    <span>ships all over pk</span><span class="dot">✦</span>
+    <span>custom orders open</span><span class="dot">✦</span>
+    <span>made with care</span><span class="dot">✦</span>
+  </div>
+</div>
+
+<!-- ABOUT STRIP -->
+<section class="about-strip" id="about">
+  <div class="about-item">
+    <div class="about-icon">🧶</div>
+    <div class="about-title">stitched by hand</div>
+    <div class="about-desc">every single piece is crocheted from scratch — no two come out exactly the same, and that's the whole point.</div>
+  </div>
+  <div class="about-item">
+    <div class="about-icon">📮</div>
+    <div class="about-title">ships nationwide</div>
+    <div class="about-desc">based in Lahore, sending little parcels of yarn all over Pakistan — wherever you are, it'll find you.</div>
+  </div>
+  <div class="about-item">
+    <div class="about-icon">✉️</div>
+    <div class="about-title">custom orders</div>
+    <div class="about-desc">got an idea stuck in your head? DM on Instagram and let's crochet it into something real.</div>
+  </div>
+</section>
+
+<div class="divider">
+  <div class="divider-line"></div>
+  <div class="divider-motif">✦ the shop ✦</div>
+  <div class="divider-line"></div>
+</div>
+
+<!-- SHOP -->
+<section id="shop">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">fresh off the hook</div>
+      <h2 class="section-title">browse the shop</h2>
+    </div>
+    <a href="#" class="section-link">see everything →</a>
+  </div>
+
+  <div class="filter-tabs">
+    <button class="filter-tab active" data-filter="all">all</button>
+    <button class="filter-tab" data-filter="bags">bags</button>
+    <button class="filter-tab" data-filter="keychains">keychains</button>
+    <button class="filter-tab" data-filter="amigurumi">amigurumi</button>
+    <button class="filter-tab" data-filter="accessories">accessories</button>
+  </div>
+
+  <div class="product-grid" id="product-grid"></div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section class="testimonial-section">
+  <p class="testimonial-label">✦ a sweet note from a customer ✦</p>
+  <blockquote class="testimonial-quote">"the star bag came so beautifully wrapped, with a little handwritten card too — it's even prettier in person. obsessed doesn't even cover it."</blockquote>
+  <p class="testimonial-author">— zara m., karachi</p>
+</section>
+
+<!-- INSTAGRAM -->
+<section class="insta-section" id="insta">
+  <div class="section-header">
+    <div>
+      <div class="section-eyebrow">@knitella.pk</div>
+      <h2 class="section-title">follow along</h2>
+    </div>
+    <a href="https://instagram.com/knitella.pk" class="section-link" target="_blank">open instagram →</a>
+  </div>
+  <div class="insta-grid">
+    <div class="insta-item" style="background:#dce8d8;">🐸</div>
+    <div class="insta-item" style="background:#f0d9c8;">⭐</div>
+    <div class="insta-item" style="background:#e3d4ec;">🐰</div>
+    <div class="insta-item" style="background:#f5e3a8;">🍥</div>
+    <div class="insta-item" style="background:#d8e3ec;">🫧</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name">knitella.pk</div>
+      <p class="footer-brand-desc">handmade crochet bags, keychains, amigurumi & little accessories — made stitch by stitch in Lahore, with a lot of patience and a little bit of magic.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">shop</div>
+      <ul class="footer-links">
+        <li><a href="#">bags</a></li>
+        <li><a href="#">keychains</a></li>
+        <li><a href="#">amigurumi</a></li>
+        <li><a href="#">custom orders</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">connect</div>
+      <ul class="footer-links">
+        <li><a href="https://instagram.com/knitella.pk" target="_blank">instagram</a></li>
+        <li><a href="https://linktr.ee/Knitella.pk" target="_blank">linktree</a></li>
+        <li><a href="#">whatsapp</a></li>
+        <li><a href="#">contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 knitella.pk</span>
+    <span>made with <span class="footer-heart">♥</span> &amp; a crochet hook in Pakistan</span>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div class="cart-toast" id="toast">added to cart ✓</div>
+
+<script>
+  const products = [
+    { id:1,  name:'Froggy Phone Bag',      cat:'bags',        price:'Rs. 2,800', emoji:'🐸', bg:'#dce8d8', tag:'Popular' },
+    { id:2,  name:'Star Crochet Tote',      cat:'bags',        price:'Rs. 3,200', emoji:'⭐', bg:'#f5e3a8', tag:'New' },
+    { id:3,  name:'Blue Ocean Pouch',       cat:'bags',        price:'Rs. 1,800', emoji:'🌊', bg:'#d8e3ec', tag:'' },
+    { id:4,  name:'Starfish Charm Set',     cat:'accessories', price:'Rs. 2,400', emoji:'🌟', bg:'#f0d9c8', tag:'New' },
+    { id:5,  name:'Miffy Keychain',         cat:'keychains',   price:'Rs. 650',   emoji:'🐰', bg:'#e3d4ec', tag:'Popular' },
+    { id:6,  name:'Naruto Amigurumi',       cat:'amigurumi',   price:'Rs. 3,500', emoji:'🍥', bg:'#f5e3a8', tag:'New' },
+    { id:7,  name:'Wizard Bear Keychain',   cat:'keychains',   price:'Rs. 750',   emoji:'🧙', bg:'#e3d4ec', tag:'' },
+    { id:8,  name:'Pearl Crochet Wristlet', cat:'bags',        price:'Rs. 2,200', emoji:'🫧', bg:'#f0d9c8', tag:'' },
+  ];
+
+  let cartCount = 0;
+  let activeFilter = 'all';
+
+  function renderProducts(filter) {
+    const grid = document.getElementById('product-grid');
+    const filtered = filter === 'all' ? products : products.filter(p => p.cat === filter);
+    grid.innerHTML = filtered.map(p => `
+      <div class="product-card" data-id="${p.id}">
+        <div class="product-tape"></div>
+        <div class="product-img" style="background:${p.bg};">${p.emoji}
+          ${p.tag ? `<div class="product-tag ${p.tag==='New'?'new':''}">${p.tag}</div>` : ''}
+        </div>
+        <div class="product-info">
+          <div class="product-cat">${p.cat}</div>
+          <div class="product-name">${p.name}</div>
+          <div class="product-footer">
+            <span class="product-price">${p.price}</span>
+            <button class="add-btn" onclick="addToCart(event, '${p.name}')">+</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function addToCart(e, name) {
+    e.stopPropagation();
+    cartCount++;
+    document.getElementById('cart-count').textContent = cartCount;
+    showToast(`"${name}" added to cart ✓`);
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2600);
+  }
+
+  document.querySelectorAll('.filter-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      renderProducts(activeFilter);
+    });
+  });
+
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  const track = document.getElementById('marquee');
+  track.innerHTML += track.innerHTML;
+
+  renderProducts('all');
+</script>
+</body>
+</html>
